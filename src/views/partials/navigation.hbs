@@ -13,105 +13,94 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       {{#if user}}
+      <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="turnosDropdown" data-toggle="dropdown">
+            Audiencias
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/mesaentrada/listado">Fechas Audiencias</a>
+            {{!-- <a class="dropdown-item" href="/mesaentrada/Estadisticas">Estadísticas</a> --}}
+          </div>
+        </li>
       <ul class="navbar-nav mr-auto">
-
-        {{!-- Turnos --}}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="turnosDropdown" data-toggle="dropdown">
             Turnos
           </a>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="/mesaentrada/listado">Listado</a>
-            <a class="dropdown-item" href="/mesaentrada/Estadisticas">Estadísticas</a>
+            <a class="dropdown-item" href="/mesaentrada/listado">Turnos Clientes</a>
+            <a class="dropdown-item" href="/mesaentrada/addturno">Turnos Abogados</a>
+            {{!-- <a class="dropdown-item" href="/mesaentrada/Estadisticas">Estadísticas</a> --}}
           </div>
         </li>
-
+        {{!-- Turnos --}}
         {{!-- Clientes --}}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="clientesDropdown" data-toggle="dropdown">
-            Clientes
+            Listados
           </a>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="/clientes/listado">Listado</a>
-            <a class="dropdown-item" href="/clientes/add">Agregar</a>
+            <a class="dropdown-item" href="/clientes/listado">Lista de Clientes</a>
+            <a class="dropdown-item" href="/abogados/listado">Lista de Abogados</a>
+            <a class="dropdown-item" href="/expedientes/listado">Lista Expedientes</a>
+            <a class="dropdown-item" href="/juicios/listado">Listado Juzgados</a>
+            
           </div>
         </li>
-
-        {{!-- Expedientes --}}
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="expedientesDropdown" data-toggle="dropdown">
-            Expedientes
+          <a class="nav-link dropdown-toggle" href="#" id="clientesDropdown" data-toggle="dropdown">
+            Agregar
           </a>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="/expedientes/listado">Listado</a>
-          </div>
-        </li>
+            <a class="dropdown-item" href="/clientes/add">Agregar Cliente</a>
+            <a class="dropdown-item" href="/expedientes/add">Agregar Expediente</a>
+            <a class="dropdown-item" href="/abogados/add">Agregar Abogado</a>
+            <a class="dropdown-item" href="/juicios/add">Agregar Juzgado</a>
 
-        {{!-- Juicios --}}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="juiciosDropdown" data-toggle="dropdown">
-            Juicios
-          </a>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="/usosuelo/listado">Listado</a>
-            <a class="dropdown-item" href="/usosuelo/add">Agregar</a>
-            <a class="dropdown-item" href="/usosuelo/Estadisticas">Estadísticas</a>
           </div>
-        </li>
-
+        </li> 
         {{!-- Cobros --}}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="cobrosDropdown" data-toggle="dropdown">
             Cobros
           </a>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="/multas">Liq. Propietarios</a>
-            <a class="dropdown-item" href="/multasprofesionales">Liq. Profesionales</a>
-            <a class="dropdown-item" href="/multas/estadisticas">Estadísticas Propietarios</a>
-            <a class="dropdown-item" href="/tasas">Ver Tasas</a>
+            <a class="dropdown-item" href="/multas">A Clientes</a>
+            <a class="dropdown-item" href="/multasprofesionales">A Profesionales</a>
+            <a class="dropdown-item" href="/multas/estadisticas">A Asociados</a>
+            <a class="dropdown-item" href="/tasas">Ver Tasa Judicial/Sellados</a>
             <a class="dropdown-item" href="/multas/addtasas">Agregar Tasa</a>
           </div>
         </li>
 
         {{!-- Agenda --}}
-        {{!-- <li class="nav-item dropdown">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="agendaDropdown" data-toggle="dropdown">
             Agenda
           </a>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="/actuaciones/listado">Registro Actuaciones</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/notes">Inspección Cartas</a>
-            <a class="dropdown-item" href="/notes/listado">Inspección Listado</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/intimaciones">Intimación Cartas</a>
-            <a class="dropdown-item" href="/intimaciones/listado">Intimación Listado</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/infracciones">Infracción Cartas</a>
-            <a class="dropdown-item" href="/infracciones/listado">Infracción Listado</a>
-            <a class="dropdown-item" href="/infracciones/estadistica">Estadística Infracción</a>
-          </div>
-        </li> --}}
-
-        {{!-- Estadísticas --}}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="estadisticaDropdown" data-toggle="dropdown">
-            Estadísticas
-          </a>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="/estadisticas">Cartas</a>
-            <a class="dropdown-item" href="/estadisticas/listado">Listado</a>
-            <a class="dropdown-item" href="/estadisticas/add">Crear Nueva</a>
+            <a class="dropdown-item" href="/actuaciones/listado">Registro Actuaciones</a>       
           </div>
         </li>
 
+        {{!-- Estadísticas --}}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-success" href="#" id="estadisticaDropdown" data-toggle="dropdown">
+            Estadísticas
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/cautelares/estadistica/listado">Medidas Cautelares</a>
+            <a class="dropdown-item" href="/sentenciasdefinitivas/estadistica/listado">Sentencias Definitivas</a>
+            <a class="dropdown-item" href="/mediaciones/estadisticas/listado">Mediaciones</a>
+          </div>
+        </li>
         {{!-- Admin --}}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle text-white" href="#" id="adminDropdown" data-toggle="dropdown">
             Admin
           </a>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="/users/signup">Crear Usuario</a>
+            <a class="dropdown-item" href="/users/11vvsOpmo90W">Crear Usuario</a>
             <a class="dropdown-item" href="/usuario/list">Usuario Actual</a>
             <a class="dropdown-item" href="/usuarios">Listar Usuarios</a>
             <a class="dropdown-item" href="/Inspectores">Listar Inspectores</a>
@@ -128,7 +117,7 @@
 
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link text-danger font-weight-bold" href="/users/logout">OFF</a>
+          <a class="nav-link text-danger font-weight-bold" href="/users/logout">CerrarSesion</a>
         </li>
       </ul>
 

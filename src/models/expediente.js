@@ -2,7 +2,15 @@ const mongoose = require("mongoose");
 //import mongoose, { model } from "mongoose";
 const { Schema } = mongoose; // aca defino esquema de base de datos
 
+// Hacer el Campo autoincremental - Primary Key
+const AutoIncrement = require('mongoose-sequence')(mongoose);
+
 ExpedienteSchema = new Schema({
+  // Campo Autoincremental
+    idexpediente: { 
+        type: Number, // El tipo debe ser Number
+        unique: true  // Debe ser único
+    },
   borrado: {
     type: String,
     required: false,
@@ -123,6 +131,13 @@ ExpedienteSchema = new Schema({
     type: String,
     // default: "/img/Imagen-no-disponible.png"
   }
+});
+
+ExpedienteSchema.plugin(AutoIncrement, {
+    inc_field: 'idexpediente', // El nombre del campo a autoincrementar (debe coincidir con el campo definido arriba)
+    start_seq: 1,           // Opcional: El número donde empezar el conteo (por defecto es 1)
+    reference_fields: [],   // Opcional: Campos para crear secuencias independientes
+    id: 'expediente_seq_counter' // Opcional: Nombre del contador en la colección 'counters' de MongoDB
 });
 
 module.exports = mongoose.model("Expediente", ExpedienteSchema);
