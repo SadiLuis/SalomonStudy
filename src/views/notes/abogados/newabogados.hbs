@@ -1,234 +1,230 @@
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        cargarProvincias();
-        document.getElementById('provincias').addEventListener('change', cargarLocalidades);
+  document.addEventListener('DOMContentLoaded', () => {
+    cargarProvincias();
+    const prov = document.getElementById('provincias');
+    if (prov) prov.addEventListener('change', cargarLocalidades);
+  });
+
+  function cargarProvincias() {
+    const selectProvincia = document.getElementById("provincias");
+    if (!selectProvincia) return;
+
+    selectProvincia.innerHTML = '<option value="">Seleccione una Provincia...</option>';
+    const provincias = Object.keys(dataArgentina || {}).sort();
+    provincias.forEach(provincia => {
+      const option = document.createElement("option");
+      option.value = provincia;
+      option.textContent = provincia;
+      selectProvincia.appendChild(option);
     });
-   
-    function cargarProvincias() {
-        const selectProvincia = document.getElementById("provincias");
-       
-        selectProvincia.innerHTML = '<option value="">Seleccione una Provincia...</option>';
 
-        const provincias = Object.keys(dataArgentina).sort();
+    const pre = selectProvincia.getAttribute('data-selected-value');
+    if (pre) {
+      selectProvincia.value = pre;
+      cargarLocalidades();
+    }
+  }
 
-        provincias.forEach(provincia => {
-            const option = document.createElement("option");
-            option.value = provincia;
-            option.innerHTML = provincia;
-            selectProvincia.appendChild(option);
-        });
-        
-        const provinciaSeleccionada = selectProvincia.getAttribute('data-selected-value');
-        if (provinciaSeleccionada) {
-            selectProvincia.value = provinciaSeleccionada;
-            cargarLocalidades();
-        }
+  function cargarLocalidades() {
+    const selectProvincia = document.getElementById("provincias");
+    const selectLocalidad = document.getElementById("localidadAbogado");
+    if (!selectProvincia || !selectLocalidad) return;
+
+    const provinciaSeleccionada = selectProvincia.value;
+    selectLocalidad.innerHTML = '<option value="">Seleccione una localidad...</option>';
+    selectLocalidad.disabled = true;
+
+    if (provinciaSeleccionada && (dataArgentina || {})[provinciaSeleccionada]) {
+      const localidades = (dataArgentina[provinciaSeleccionada] || []).sort();
+      localidades.forEach(localidad => {
+        const option = document.createElement("option");
+        option.value = localidad;
+        option.textContent = localidad;
+        selectLocalidad.appendChild(option);
+      });
+      selectLocalidad.disabled = false;
     }
 
-    function cargarLocalidades() {
-        const selectProvincia = document.getElementById("provincias");
-        const selectLocalidad = document.getElementById("localidadAbogado");
-        const provinciaSeleccionada = selectProvincia.value;
-
-        selectLocalidad.disabled = true;
-
-        if (provinciaSeleccionada && dataArgentina[provinciaSeleccionada]) {
-            const localidades = dataArgentina[provinciaSeleccionada].sort();
-
-            localidades.forEach(localidad => {
-                const option = document.createElement("option");
-                option.value = localidad;
-                option.innerHTML = localidad;
-                selectLocalidad.appendChild(option);
-            });
-
-            selectLocalidad.disabled = false;
-        }
-        
-        const localidadPrevia = selectLocalidad.getAttribute('data-selected-value');
-        if (localidadPrevia && selectLocalidad.querySelector(`option[value="${localidadPrevia}"]`)) {
-            selectLocalidad.value = localidadPrevia;
-        }
+    const localidadPrevia = selectLocalidad.getAttribute('data-selected-value');
+    if (localidadPrevia && selectLocalidad.querySelector(`option[value="${localidadPrevia}"]`)) {
+      selectLocalidad.value = localidadPrevia;
     }
-    
-    function ponerminuscula(element) {
-        element.value = element.value.toLowerCase();
-    }
-    
-    function ShowName() {
-        const input = document.getElementById('nyaAbogado');
-        if (input.value.trim() === '') return;
+  }
 
-        input.value = formatToString(input.value);
-    }
+  function ponerminuscula(el) {
+    if (!el) return;
+    el.value = el.value.toLowerCase();
+  }
 
-    function formatToString(writtenName) {
-        const cleanedName = writtenName.trim().replace(/\s+/g, ' ');
+  function ShowName() {
+    const input = document.getElementById('nyaAbogado');
+    if (!input) return;
+    if (input.value.trim() === '') return;
+    input.value = formatToString(input.value);
+  }
 
-        const fullName = cleanedName.split(" ").map(element => {
-            if (element.length > 0) {
-                return element.charAt(0).toUpperCase() + element.slice(1).toLowerCase();
-            }
-            return element;
-        }).join(" ");
-
-        return fullName;
-    }
+  function formatToString(writtenName) {
+    const cleaned = (writtenName || '').trim().replace(/\s+/g, ' ');
+    return cleaned.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+  }
 </script>
 
-<div class="row">
-    <div class="col-md-8 mx-auto">
-        <div class="card shadow-lg border-primary">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Registro de Abogados</h4>
-            </div>
-            <div class="card-body">
-                <form action="/Abogados/newAbogado" method="POST">
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="Abogado-tab" data-bs-toggle="tab" href="#Abogado-datos"
-                                role="tab" aria-controls="Abogado-datos" aria-selected="true">
-                                <i class="fas fa-user"></i> Datos Personales del Abogado
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="myTabContent">
-
-                        <div class="tab-pane fade show active" id="Abogado-datos" role="tabpanel"
-                            aria-labelledby="Abogado-tab">
-                            <div class="row mt-3">
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="nyaAbogado">Nombre y Apellido / Razón Social <span
-                                            class="text-danger">*</span></label>
-                                    <input onkeyup="ShowName()" type="text" class="form-control" id="nyaAbogado"
-                                        name="nyaAbogado" value="{{nyaAbogado}}" required>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="dniAbogado"> DNI / CUIT <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="dniAbogado" name="dniAbogado"
-                                        value="{{dniAbogado}}">
-                                </div>                                
-
-                                 <div class="col-md-6 mb-3">
-                                    <label for="domicilioAbogado">Domicilio Completo</label>
-                                    <input type="text" class="form-control" id="domicilioAbogado" name="domicilioAbogado"
-                                        value="{{domicilioAbogado}}">
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    <label for="matriculaabogado">N° Matricula <span
-                                            class="text-danger">*</span></label>
-                                    <input onkeyup="ponerminuscula(this)" id="matriculaabogado" type="text"
-                                        class="form-control" name="matriculaabogado" value="{{matriculaabogado}}">
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    <label for="provinciaAbogado">Provincia</label>
-                                    <input onkeyup="ShowName()" type="text" class="form-control" id="provinciaAbogado" name="provinciaAbogado"
-                                        value="{{provinciaAbogado}}">
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    <label for="localidadAbogado">Ciudad/Localidad</label>
-                                    <input onkeyup="ShowName()" id="localidadAbogado" type="text"
-                                        class="form-control" name="localidadAbogado" value="{{localidadAbogado}}">
-                                </div>
-                               
-                                <div class="col-md-6 mb-3">
-                                    <label for="telefonoAbogado">Teléfono Fijo / Celular</label>
-                                    <input type="text" class="form-control" id="telefonoAbogado" name="telefonoAbogado"
-                                        value="{{telefonoAbogado}}">
-                                </div>
-                               
-                                <div class="col-md-6 mb-3">
-                                    <label for="emailAbogado">Correo Electrónico Personal</label>
-                                    <input onkeyup="ponerminuscula(this)" id="emailAbogado" type="email"
-                                        class="form-control" name="emailAbogado" value="{{emailAbogado}}">
-                                </div>
-
-                                <div class="col-md-12 mb-3">
-                                    <label for="correovinculadoAbogadoestudio">Correo Vinculado Abogado/Estudio</label>
-                                    <input onkeyup="ponerminuscula(this)" id="correovinculadoAbogadoestudio"
-                                        type="email" class="form-control" name="correovinculadoAbogadoestudio"
-                                        value="{{correovinculadoAbogadoestudio}}">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="expediente-datos" role="tabpanel"
-                            aria-labelledby="expediente-tab">
-                            <div class="row mt-3">
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="numexpedienteAbogado">Nro. Expediente Judicial</label>
-                                    <input type="text" class="form-control" name="numexpedienteAbogado"
-                                        value="{{numexpedienteAbogado}}">
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="juzgadoexpedienteAbogado">Juzgado</label>
-                                    <input type="text" class="form-control" name="juzgadoexpedienteAbogado"
-                                        value="{{juzgadoexpedienteAbogado}}">
-                                </div>
-
-                                <div class="col-md-12 mb-3">
-                                    <label for="caratulaexpedienteAbogado">Carátula del Expediente (Ej: Perez c/
-                                        Gómez)</label>
-                                    <input type="text" class="form-control" name="caratulaexpedienteAbogado"
-                                        value="{{caratulaexpedienteAbogado}}">
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="numerocarpetaopcionalAbogado">Nro. Carpeta Interna (opcional)</label>
-                                    <input type="text" class="form-control" name="numerocarpetaopcionalAbogado"
-                                        value="{{numerocarpetaopcionalAbogado}}">
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="fechaaudienciaAbogado">Fecha Próxima Audiencia / Vencimiento</label>
-                                    <input style="font-weight: bold; color:black" type="date" id="fechaaudienciaAbogado"
-                                        name="fechaaudienciaAbogado" class="form-control"
-                                        value="{{fechaaudienciaAbogado}}">
-                                </div>
-
-                                <div class="col-md-12 mb-3">
-                                    <label for="actuacionjudicialconfechaAbogado">Última Actuación Judicial (con
-                                        fecha)</label>
-                                    <input type="text" class="form-control" name="actuacionjudicialconfechaAbogado"
-                                        value="{{actuacionjudicialconfechaAbogado}}">
-                                </div>
-
-                                <div class="col-md-12 mb-3">
-                                    <label for="actosprocesalesAbogado">Actos Procesales Relevantes</label>
-                                    <input type="text" class="form-control" name="actosprocesalesAbogado"
-                                        value="{{actosprocesalesAbogado}}">
-                                </div>
-
-                                <div class="col-md-12 mb-3">
-                                    <label for="observacionesAbogado">Observaciones del Caso / Notas Internas</label>
-                                    <textarea class="form-control" id="observacionesAbogado" name="observacionesAbogado"
-                                        rows="3">{{observacionesAbogado}}</textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr>
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-success btn-lg">
-                            <i class="fas fa-save"></i> Registrar Abogado
-                        </button>
-                    </div>
-                    <div class="text-center mt-3">
-                        <a href="javascript:history.back();" class="btn btn-link text-danger">
-                            <i class="fas fa-ban"></i> Cancelar
-                        </a>
-                    </div>
-                </form>
-            </div>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Registro de Abogados</h4>
         </div>
+
+        <div class="card-body">
+          <form action="/Abogados/newAbogado" method="POST" novalidate>
+            <!-- Tabs (kept minimal) -->
+            <ul class="nav nav-tabs mb-3" id="abogadoTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="datos-tab" data-bs-toggle="tab" data-bs-target="#datos"
+                  type="button" role="tab" aria-controls="datos" aria-selected="true">
+                  <i class="fas fa-user me-1"></i> Datos Personales
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="expediente-tab" data-bs-toggle="tab" data-bs-target="#expediente"
+                  type="button" role="tab" aria-controls="expediente" aria-selected="false">
+                  <i class="fas fa-file-alt me-1"></i> Expediente / Notas
+                </button>
+              </li>
+            </ul>
+
+            <div class="tab-content">
+              <!-- DATOS PERSONALES -->
+              <div class="tab-pane fade show active" id="datos" role="tabpanel" aria-labelledby="datos-tab">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label for="nyaAbogado" class="form-label">Nombre y Apellido / Razón Social <span class="text-danger">*</span></label>
+                    <input onkeyup="ShowName()" id="nyaAbogado" name="nyaAbogado" type="text" class="form-control"
+                      value="{{nyaAbogado}}" placeholder="Ej: Juan Pérez" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="dniAbogado" class="form-label">DNI / CUIT</label>
+                    <input id="dniAbogado" name="dniAbogado" type="text" class="form-control" value="{{dniAbogado}}"
+                      placeholder="Nº Documento o CUIT">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="domicilioAbogado" class="form-label">Domicilio completo</label>
+                    <input id="domicilioAbogado" name="domicilioAbogado" type="text" class="form-control"
+                      value="{{domicilioAbogado}}" placeholder="Calle, Nº, Piso, Departamento">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="matriculaabogado" class="form-label">N° Matrícula <span class="text-danger">*</span></label>
+                    <input onkeyup="ponerminuscula(this)" id="matriculaabogado" name="matriculaabogado" type="text" class="form-control"
+                      value="{{matriculaabogado}}" placeholder="Ej: 12345/AA" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="provincias" class="form-label">Provincia</label>
+                    <select id="provincias" name="provinciaAbogado" class="form-select" data-selected-value="{{provinciaAbogado}}">
+                      <option value="">Cargando provincias...</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="localidadAbogado" class="form-label">Ciudad / Localidad</label>
+                    <select id="localidadAbogado" name="localidadAbogado" class="form-select" data-selected-value="{{localidadAbogado}}" disabled>
+                      <option value="">Seleccione provincia primero</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="telefonoAbogado" class="form-label">Teléfono fijo / Celular</label>
+                    <input id="telefonoAbogado" name="telefonoAbogado" type="text" class="form-control" value="{{telefonoAbogado}}"
+                      placeholder="Ej: 11 1234 5678">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="emailAbogado" class="form-label">Correo electrónico personal</label>
+                    <input onkeyup="ponerminuscula(this)" id="emailAbogado" name="emailAbogado" type="email" class="form-control"
+                      value="{{emailAbogado}}" placeholder="ejemplo@dominio.com">
+                  </div>
+
+                  <div class="col-12">
+                    <label for="correovinculadoAbogadoestudio" class="form-label">Correo vinculado (abogado/estudio)</label>
+                    <input onkeyup="ponerminuscula(this)" id="correovinculadoAbogadoestudio"
+                      name="correovinculadoAbogadoestudio" type="email" class="form-control"
+                      value="{{correovinculadoAbogadoestudio}}" placeholder="contacto@estudio.com">
+                  </div>
+                </div>
+              </div>
+
+              <!-- EXPEDIENTE / NOTAS -->
+              <div class="tab-pane fade" id="expediente" role="tabpanel" aria-labelledby="expediente-tab">
+                <div class="row g-3 mt-2">
+                  <div class="col-md-6">
+                    <label for="numexpedienteAbogado" class="form-label">Nro. Expediente Judicial</label>
+                    <input id="numexpedienteAbogado" name="numexpedienteAbogado" type="text" class="form-control"
+                      value="{{numexpedienteAbogado}}" placeholder="Ej: 12345/2024">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="juzgadoexpedienteAbogado" class="form-label">Juzgado</label>
+                    <input id="juzgadoexpedienteAbogado" name="juzgadoexpedienteAbogado" type="text" class="form-control"
+                      value="{{juzgadoexpedienteAbogado}}" placeholder="Ej: Juzgado Civil N°3">
+                  </div>
+
+                  <div class="col-12">
+                    <label for="caratulaexpedienteAbogado" class="form-label">Carátula del expediente</label>
+                    <input id="caratulaexpedienteAbogado" name="caratulaexpedienteAbogado" type="text" class="form-control"
+                      value="{{caratulaexpedienteAbogado}}" placeholder="Ej: Pérez c/ Gómez">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="numerocarpetaopcionalAbogado" class="form-label">Nro. Carpeta interna (opcional)</label>
+                    <input id="numerocarpetaopcionalAbogado" name="numerocarpetaopcionalAbogado" type="text" class="form-control"
+                      value="{{numerocarpetaopcionalAbogado}}" placeholder="Código interno">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="fechaaudienciaAbogado" class="form-label">Fecha próxima (audiencia / vencimiento)</label>
+                    <input id="fechaaudienciaAbogado" name="fechaaudienciaAbogado" type="date" class="form-control"
+                      value="{{fechaaudienciaAbogado}}">
+                  </div>
+
+                  <div class="col-12">
+                    <label for="actuacionjudicialconfechaAbogado" class="form-label">Última actuación judicial (con fecha)</label>
+                    <input id="actuacionjudicialconfechaAbogado" name="actuacionjudicialconfechaAbogado" type="text" class="form-control"
+                      value="{{actuacionjudicialconfechaAbogado}}" placeholder="Ej: Notificación - 2024-09-10">
+                  </div>
+
+                  <div class="col-12">
+                    <label for="actosprocesalesAbogado" class="form-label">Actos procesales relevantes</label>
+                    <input id="actosprocesalesAbogado" name="actosprocesalesAbogado" type="text" class="form-control"
+                      value="{{actosprocesalesAbogado}}">
+                  </div>
+
+                  <div class="col-12">
+                    <label for="observacionesAbogado" class="form-label">Observaciones / notas internas</label>
+                    <textarea id="observacionesAbogado" name="observacionesAbogado" class="form-control" rows="4"
+                      placeholder="Notas internas">{{observacionesAbogado}}</textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <a href="javascript:history.back()" class="btn btn-outline-secondary me-md-2">
+                <i class="fas fa-ban me-1"></i> Cancelar
+              </a>
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-save me-1"></i> Registrar Abogado
+              </button>
+            </div>
+          </form>
+        </div> <!-- /card-body -->
+      </div> <!-- /card -->
     </div>
+  </div>
 </div>
